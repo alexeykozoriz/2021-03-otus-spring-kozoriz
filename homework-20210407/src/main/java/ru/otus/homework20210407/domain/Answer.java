@@ -1,12 +1,11 @@
 package ru.otus.homework20210407.domain;
 
-import lombok.Data;
+import lombok.Getter;
 
 /**
- * Ответ на вопрос с оценкой
+ * Ответ
  */
-@Data
-public class Answer {
-    public final Question question;
-    public final Integer selectedOption;
+@Getter
+public abstract class Answer {
+    protected Question question;
 }
