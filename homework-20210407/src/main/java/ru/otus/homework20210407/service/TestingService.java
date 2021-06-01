@@ -1,27 +1,19 @@
 package ru.otus.homework20210407.service;
 
 import ru.otus.homework20210407.domain.Answer;
-import ru.otus.homework20210407.domain.Question;
 
 import java.util.List;
 
 /**
- * Интерфейс сервиса для тестирования
+ * Интерфейс сервисного класса для оценки ответов
  */
 public interface TestingService {
 
     /**
-     * Имя
+     * Пройден ли тест
+     *
+     * @param answers ответы
+     * @return true если да
      */
-    String getFirstName();
-
-    /**
-     * Фамилия
-     */
-    String getLastName();
-
-    /**
-     * Ответы на вопросы
-     */
-    List<Answer> getAnswers(List<Question> questions);
+    boolean isTestingPassed(List<Answer> answers);
 }

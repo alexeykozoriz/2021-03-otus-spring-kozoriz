@@ -1,5 +1,7 @@
-"1","What programming language do you use at work?","PHP,Java,C#,Python,C/C++,Objective-C,Kotlin,TypeScript,Swift"
-"2","What is your total programming experience?","No experience,Some years,Over 5 years,Over 10 years,Over 20 years"
-"3","What antivirus do you use?","Norton,AVG,Kaspersky,McAfee,Avast,Bitdefender,Panda,Avira,G Data,Eset,F-Secure"
-"4","What messenger do you use most often?","Skype,WhatsApp,Discord,Telegram,Viber,WeChat,Facebook Messenger"
-"5","What social network do you use most often?","Facebook,YouTube,Instagram,Twitter,Reddit,Pinterest,LinkedIn,VK"
+"1", "Enter first name",,
+"2", "Enter last name",,
+"3","What programming language do you use at work?","PHP,Java,C#,Python,C/C++,Objective-C,Kotlin,TypeScript,Swift","2,3,4,5,7"
+"4","What is your total programming experience?","No experience,Some years,Over 5 years,Over 10 years,Over 20 years","3,4,5"
+"5","What antivirus do you use?","Norton,AVG,Kaspersky,McAfee,Avast,Bitdefender,Panda,Avira,G Data,Eset,F-Secure",
+"6","What messenger do you use most often?","Skype,WhatsApp,Discord,Telegram,Viber,WeChat,Facebook Messenger",
+"7","What social network do you use most often?","Facebook,YouTube,Instagram,Twitter,Reddit,Pinterest,LinkedIn,VK",
