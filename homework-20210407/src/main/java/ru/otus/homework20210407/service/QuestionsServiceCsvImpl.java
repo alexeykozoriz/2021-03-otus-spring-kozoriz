@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.homework20210407.dao.QuestionDao;
 import ru.otus.homework20210407.domain.Question;
-import ru.otus.homework20210407.error.CsvReadError;
+import ru.otus.homework20210407.error.QuestionsReadingError;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class QuestionsServiceCsvImpl implements QuestionsService {
     private final QuestionDao questionDao;
 
     @Override
-    public List<Question> findAllQuestions() throws CsvReadError {
+    public List<Question> findAllQuestions() throws QuestionsReadingError {
         return questionDao.findAll();
     }
 
