@@ -4,7 +4,8 @@ import com.opencsv.CSVReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.otus.homework20210407.domain.Question;
-import ru.otus.homework20210407.error.CsvReadError;
+import ru.otus.homework20210407.error.QuestionsReadingError;
+import ru.otus.homework20210407.utils.QuestionMappingUtil;
 
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -17,18 +18,21 @@ import java.util.Objects;
 @Component
 public class QuestionDaoCsvImpl implements QuestionDao {
 
-    @Value("${application.csv-resource-name}")
-    private String resourceName;
+    private final String resourceName;
+
+    public QuestionDaoCsvImpl(@Value("${application.csv-resource-name}") String resourceName) {
+        this.resourceName = resourceName;
+    }
 
     @Override
-    public List<Question> findAll() throws CsvReadError {
+    public List<Question> findAll() throws QuestionsReadingError {
         var result = new ArrayList<Question>();
         try (var csvReader = new CSVReader(
                 new InputStreamReader(
                         Objects.requireNonNull(getClass().getResourceAsStream(resourceName))))) {
-            csvReader.readAll().stream().map(Question::map).filter(Objects::nonNull).forEach(result::add);
+            csvReader.readAll().stream().map(QuestionMappingUtil::mapCsv).filter(Objects::nonNull).forEach(result::add);
         } catch (Exception e) {
-            throw new CsvReadError(e);
+            throw new QuestionsReadingError(e);
         }
         return result;
     }

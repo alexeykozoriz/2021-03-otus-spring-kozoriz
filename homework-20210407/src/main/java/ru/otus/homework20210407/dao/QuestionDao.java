@@ -2,7 +2,7 @@ package ru.otus.homework20210407.dao;
 
 import org.springframework.lang.NonNull;
 import ru.otus.homework20210407.domain.Question;
-import ru.otus.homework20210407.error.CsvReadError;
+import ru.otus.homework20210407.error.QuestionsReadingError;
 
 import java.util.List;
 
@@ -17,5 +17,5 @@ public interface QuestionDao {
      * @return список
      */
     @NonNull
-    List<Question> findAll() throws CsvReadError;
+    List<Question> findAll() throws QuestionsReadingError;
 }
