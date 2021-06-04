@@ -2,6 +2,7 @@ package ru.otus.homework20210407.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import ru.otus.homework20210407.domain.AnswerByText;
 
 import java.text.MessageFormat;
@@ -23,7 +24,10 @@ public class RunnerServiceConsoleImpl implements RunnerService {
     public void runTesting() throws Exception {
         final var allAnswers = answersService.getAnswers(
                 questionsService.findAllQuestions());
-        interactionService.sendTextMessage(
+        if (CollectionUtils.isEmpty(allAnswers)) {
+            return;
+        }
+        interactionService.outputString(
                 MessageFormat.format("{0} : {1}",
                         allAnswers.stream()
                                 .filter(AnswerByText.class::isInstance)

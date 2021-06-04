@@ -3,20 +3,19 @@ package ru.otus.homework20210407.service;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.homework20210407.domain.Answer;
 import ru.otus.homework20210407.domain.AnswerByOption;
 import ru.otus.homework20210407.domain.Question;
 
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayName("Класс RunnerServiceConsoleImpl")
-@ExtendWith(MockitoExtension.class)
+@DisplayName("Класс TestingServiceImpl")
 class TestingServiceImplTest {
 
     public static final Question QUESTION_1 = new Question("1", "2x2=?", Arrays.asList("1", "2", "3", "4"), Collections.singletonList(4));
@@ -44,8 +43,13 @@ class TestingServiceImplTest {
 
     @ParameterizedTest
     @ValueSource(strings = {HAPPY, WRONG})
-    void isTestingPassedTest(String caseName) {
+    void isTestingPassedByCase(String caseName) {
         assertEquals(resultByCase.get(caseName),
                 testingService.isTestingPassed(answersByCase.get(caseName)));
+    }
+
+    @Test
+    void isTestingPassedWithEmptyAnswers() {
+        assertDoesNotThrow(() -> testingService.isTestingPassed(null));
     }
 }
