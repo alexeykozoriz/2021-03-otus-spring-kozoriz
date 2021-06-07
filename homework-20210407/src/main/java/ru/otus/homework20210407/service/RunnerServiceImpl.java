@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class RunnerServiceConsoleImpl implements RunnerService {
+public class RunnerServiceImpl implements RunnerService {
 
     private final QuestionsService questionsService;
     private final AnswersService answersService;

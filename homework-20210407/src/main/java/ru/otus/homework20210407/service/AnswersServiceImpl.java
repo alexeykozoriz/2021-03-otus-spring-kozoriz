@@ -43,7 +43,7 @@ public class AnswersServiceImpl implements AnswersService {
     }
 
     /**
-     * Подсказка к вопросу для вывода в консоль
+     * Подсказка к вопросу
      *
      * @param question вопрос
      * @return строка

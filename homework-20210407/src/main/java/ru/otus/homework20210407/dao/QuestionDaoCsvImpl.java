@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Реализация хранилища вопрсов в виде CSV-файла
+ * Реализация хранилища вопросов в виде CSV-файла
  */
 @Repository
 public class QuestionDaoCsvImpl implements QuestionDao {
