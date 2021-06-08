@@ -1,6 +1,7 @@
 package ru.otus.homework20210407.utils;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import ru.otus.homework20210407.domain.Question;
 
@@ -11,9 +12,8 @@ import java.util.stream.Collectors;
 /**
  * Утилитный класс для маппинга вопросов
  */
-public final class QuestionMappingUtil {
-
-    private QuestionMappingUtil() { }
+@Component
+public class QuestionMapper {
 
     /**
      * Маппинг вопроса из CSV
@@ -21,7 +21,7 @@ public final class QuestionMappingUtil {
      * @param csvRow строка CSV
      * @return вопрос
      */
-    public static Question mapCsv(String[] csvRow) {
+    public Question mapCsv(String[] csvRow) {
         if (csvRow == null || csvRow.length != 4) {
             return null;
         }

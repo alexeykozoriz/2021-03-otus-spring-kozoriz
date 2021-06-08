@@ -15,7 +15,6 @@ public interface AnswersService {
      *
      * @param questions вопросы
      * @return ответы
-     * @throws Exception общее исключение
      */
-    List<Answer> getAnswers(List<Question> questions) throws Exception;
+    List<Answer> getAnswers(List<Question> questions);
 }

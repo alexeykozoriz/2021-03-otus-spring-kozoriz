@@ -12,8 +12,8 @@ import java.util.Scanner;
 public class InteractionServiceConsoleImpl implements InteractionService {
 
     @Override
-    public String requestTextAnswer(String question) {
-        System.out.print(question);
+    public String readString(String prompt) {
+        System.out.print(prompt);
         var scanner = new Scanner(System.in);
         String input;
         do {
@@ -28,8 +28,8 @@ public class InteractionServiceConsoleImpl implements InteractionService {
     }
 
     @Override
-    public Integer requestOptionNumber(String question, int optionsSize) {
-        System.out.print(question);
+    public Integer readIntByInterval(String prompt, int interval) {
+        System.out.print(prompt);
         var scanner = new Scanner(System.in);
         Integer selected;
         do {
@@ -44,8 +44,8 @@ public class InteractionServiceConsoleImpl implements InteractionService {
                 System.out.println("Option number must be an integer");
                 continue;
             }
-            if (selected < 1 || selected > optionsSize) {
-                System.out.printf("Option number must be in range of 1..%s%n", optionsSize);
+            if (selected < 1 || selected > interval) {
+                System.out.printf("Option number must be in range of 1..%s%n", interval);
                 continue;
             }
             break;
@@ -54,7 +54,7 @@ public class InteractionServiceConsoleImpl implements InteractionService {
     }
 
     @Override
-    public void sendTextMessage(String text) {
+    public void outputString(String text) {
         System.out.println(text);
     }
 }

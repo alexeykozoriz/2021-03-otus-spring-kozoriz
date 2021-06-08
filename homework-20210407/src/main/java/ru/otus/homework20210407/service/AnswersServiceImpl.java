@@ -9,7 +9,6 @@ import ru.otus.homework20210407.domain.Answer;
 import ru.otus.homework20210407.domain.AnswerByOption;
 import ru.otus.homework20210407.domain.AnswerByText;
 import ru.otus.homework20210407.domain.Question;
-import ru.otus.homework20210407.error.PromptBuildingError;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -29,37 +28,37 @@ public class AnswersServiceImpl implements AnswersService {
     private final InteractionService interactionService;
 
     @Override
-    public List<Answer> getAnswers(List<Question> questions) throws PromptBuildingError {
+    public List<Answer> getAnswers(List<Question> questions) {
         List<Answer> results = new ArrayList<>();
         for (Question question : questions) {
             final var options = question.getOptions();
             final String prompt = getQuestionPrompt(question);
             if (CollectionUtils.isEmpty(options)) {
-                results.add(new AnswerByText(question, interactionService.requestTextAnswer(prompt)));
+                results.add(new AnswerByText(question, interactionService.readString(prompt)));
             } else {
-                results.add(new AnswerByOption(question, interactionService.requestOptionNumber(prompt, options.size())));
+                results.add(new AnswerByOption(question, interactionService.readIntByInterval(prompt, options.size())));
             }
         }
         return results;
     }
 
     /**
-     * Подсказка к вопросу для вывода в консоль
+     * Подсказка к вопросу
      *
      * @param question вопрос
      * @return строка
-     * @throws PromptBuildingError ошибка создания подсказки
      */
     @NonNull
-    private String getQuestionPrompt(Question question) throws PromptBuildingError {
+    private String getQuestionPrompt(Question question) {
         if (question == null) {
-            throw new PromptBuildingError("Empty question");
+            throw new IllegalArgumentException("Empty question");
         }
         if (!StringUtils.hasText(question.getText())) {
-            throw new PromptBuildingError("Empty question text");
+            throw new IllegalArgumentException("Empty question text");
         }
         if (!StringUtils.hasText(question.getNumber())) {
-            throw new PromptBuildingError("Question {0} has empty number", question.getText());
+            throw new IllegalArgumentException(
+                    MessageFormat.format("Question {0} has empty number", question.getText()));
         }
         var sb = new StringBuilder(
                 MessageFormat.format("{0}) {1}\n", question.getNumber(), question.getText()));

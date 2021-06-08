@@ -6,26 +6,26 @@ package ru.otus.homework20210407.service;
 public interface InteractionService {
 
     /**
-     * Запрос ответа на вопрос в произвольной форме
+     * Чтение строки
      *
-     * @param question вопрос
+     * @param prompt подсказка
      * @return не-пустая строка
      */
-    String requestTextAnswer(String question);
+    String readString(String prompt);
 
     /**
-     * Запрос ответа на вопрос в форме выбранной опции
+     * Чтение целого числа в интервале от 1 до заданного максимума
      *
-     * @param question    вопрос
-     * @param optionsSize количество опций
-     * @return целое число в пределах количества опций
+     * @param prompt   подсказка
+     * @param interval максимальное значение
+     * @return целое число
      */
-    Integer requestOptionNumber(String question, int optionsSize);
+    Integer readIntByInterval(String prompt, int interval);
 
     /**
-     * Отправка текстового сообщения
+     * Вывод строки
      *
-     * @param text текст
+     * @param text строка
      */
-    void sendTextMessage(String text);
+    void outputString(String text);
 }
