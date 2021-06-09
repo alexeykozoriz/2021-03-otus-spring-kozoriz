@@ -33,7 +33,7 @@ class AnswersServiceImplTest {
     void getAnswersByText() {
         answersService.getAnswers(
                 Collections.singletonList(
-                        new Question("1", "Enter fullname", null, null)));
+                        new Question("1", "Test text", null, null)));
         verify(interactionService, times(1)).readString(any());
     }
 

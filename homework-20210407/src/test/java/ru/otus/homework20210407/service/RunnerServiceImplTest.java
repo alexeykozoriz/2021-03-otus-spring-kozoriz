@@ -23,15 +23,15 @@ import static org.mockito.Mockito.*;
 class RunnerServiceImplTest {
 
     @Mock
-    QuestionsService questionsService;
+    private QuestionsService questionsService;
     @Mock
-    AnswersService answersService;
+    private AnswersService answersService;
     @Mock
-    TestingService testingService;
+    private TestingService testingService;
     @Mock
-    InteractionService interactionService;
+    private InteractionService interactionService;
     @InjectMocks
-    RunnerServiceImpl runnerService;
+    private RunnerServiceImpl runnerService;
 
     /**
      * Выполнение алгоритма тестирования
