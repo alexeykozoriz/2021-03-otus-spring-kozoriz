@@ -6,6 +6,7 @@ import org.springframework.util.CollectionUtils;
 import ru.otus.homework20210407.domain.AnswerByText;
 
 import java.text.MessageFormat;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 /**
@@ -19,6 +20,7 @@ public class RunnerServiceImpl implements RunnerService {
     private final AnswersService answersService;
     private final TestingService testingService;
     private final InteractionService interactionService;
+    private final ResourceBundle resourceBundle;
 
     @Override
     public void runTesting() throws Exception {
@@ -33,6 +35,7 @@ public class RunnerServiceImpl implements RunnerService {
                                 .filter(AnswerByText.class::isInstance)
                                 .map(p -> ((AnswerByText) p).getText())
                                 .collect(Collectors.joining(" ")),
-                        testingService.isTestingPassed(allAnswers) ? "SUCCESS" : "FAIL"));
+                        resourceBundle.getString(
+                                testingService.isTestingPassed(allAnswers) ? "success" : "fail")));
     }
 }

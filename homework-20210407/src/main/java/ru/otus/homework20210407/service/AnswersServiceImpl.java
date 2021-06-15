@@ -13,6 +13,7 @@ import ru.otus.homework20210407.domain.Question;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Реализация по-умолчанию.
@@ -26,6 +27,7 @@ import java.util.List;
 public class AnswersServiceImpl implements AnswersService {
 
     private final InteractionService interactionService;
+    private final ResourceBundle resourceBundle;
 
     @Override
     public List<Answer> getAnswers(List<Question> questions) {
@@ -61,12 +63,18 @@ public class AnswersServiceImpl implements AnswersService {
                     MessageFormat.format("Question {0} has empty number", question.getText()));
         }
         var sb = new StringBuilder(
-                MessageFormat.format("{0}) {1}\n", question.getNumber(), question.getText()));
+                MessageFormat.format("{0}) {1}\n",
+                        question.getNumber(),
+                        resourceBundle.getString(question.getText())));
         if (!CollectionUtils.isEmpty(question.getOptions())
                 && question.getOptions().stream().allMatch(StringUtils::hasText)) {
             for (var i = 0; i < question.getOptions().size(); i++) {
+                var option = question.getOptions().get(i);
+                if (resourceBundle.containsKey(option)) {
+                    option = resourceBundle.getString(option);
+                }
                 sb.append(
-                        MessageFormat.format("{0}) {1}\n", i + 1, question.getOptions().get(i)));
+                        MessageFormat.format("{0}) {1}\n", i + 1, option));
             }
             sb.append("Select ony one option: ");
         }
