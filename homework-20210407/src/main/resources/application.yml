@@ -1,2 +1,6 @@
 application:
-  csv-resource-name: "/questions.csv"
+  csv-resource-name: "/questions_{0}.csv"
+
+spring:
+  messages:
+    basename: i18n.messages

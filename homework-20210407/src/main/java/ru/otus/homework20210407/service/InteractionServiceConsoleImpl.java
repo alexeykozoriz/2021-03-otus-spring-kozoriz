@@ -1,28 +1,33 @@
 package ru.otus.homework20210407.service;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
  * Реализация для взаимодействия через консоль
  */
 @Service
+@RequiredArgsConstructor
 public class InteractionServiceConsoleImpl implements InteractionService {
 
+    public static final Locale LOCALE = Locale.forLanguageTag("ru-RU");
     private final InputStream inputStream;
     private final PrintStream printStream;
+    private final MessageSource messageSource;
 
-    public InteractionServiceConsoleImpl() {
-        this(System.in, System.out);
-    }
-
-    public InteractionServiceConsoleImpl(InputStream inputStream, PrintStream printStream) {
-        this.inputStream = inputStream;
-        this.printStream = printStream;
+    @Autowired
+    public InteractionServiceConsoleImpl(MessageSource messageSource) {
+        this.inputStream = System.in;
+        this.printStream = System.out;
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -33,7 +38,8 @@ public class InteractionServiceConsoleImpl implements InteractionService {
         do {
             input = scanner.nextLine();
             if (!StringUtils.hasText(input)) {
-                printStream.println("Answer is required");
+                printStream.println(
+                        messageSource.getMessage("answer-required", null, LOCALE));
                 continue;
             }
             break;
@@ -49,17 +55,20 @@ public class InteractionServiceConsoleImpl implements InteractionService {
         do {
             String input = scanner.nextLine();
             if (!StringUtils.hasText(input)) {
-                printStream.println("Answer is required");
+                printStream.println(
+                        messageSource.getMessage("answer-required", null, LOCALE));
                 continue;
             }
             try {
                 selected = Integer.parseInt(input);
             } catch (Exception e) {
-                printStream.println("Option number must be an integer");
+                printStream.println(
+                        messageSource.getMessage("option-must-be-an-integer", null, LOCALE));
                 continue;
             }
             if (selected < 1 || selected > interval) {
-                printStream.printf("Option number must be in range of 1..%s%n", interval);
+                printStream.println(
+                        messageSource.getMessage("option-must-be-in-range", new String[]{String.valueOf(interval)}, LOCALE));
                 continue;
             }
             break;

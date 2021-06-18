@@ -1,0 +1,7 @@
+"1","Введите имя",,
+"2","Введите фамилию",,
+"3","Какой язык программирования вы используете на работе?","PHP,Java,C#,Python,C/C++,Objective-C,Kotlin,TypeScript,Swift","2,3,4,5,7"
+"4","Каков ваш общий опыт программирования?","Нет опыта,Несколько лет,Более 5 лет,Более 10 лет,Более 20 лет","3,4,5"
+"5","Какой антивирус вы используете?","Norton,AVG,Kaspersky,McAfee,Avast,Bitdefender,Panda,Avira,G Data,Eset,F-Secure",
+"6","Какой мессенджер вы используете чаще всего?","Skype,WhatsApp,Discord,Telegram,Viber,WeChat,Facebook Messenger",
+"7","Какой социальной сетью вы пользуетесь чаще всего?","Facebook,YouTube,Instagram,Twitter,Reddit,Pinterest,LinkedIn,VK",

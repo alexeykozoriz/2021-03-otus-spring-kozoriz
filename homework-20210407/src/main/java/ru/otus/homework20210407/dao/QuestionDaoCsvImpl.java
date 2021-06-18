@@ -8,12 +8,13 @@ import ru.otus.homework20210407.error.QuestionsReadingError;
 import ru.otus.homework20210407.utils.QuestionMapper;
 
 import java.io.InputStreamReader;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * Реализация хранилища вопросов в виде CSV-файла
+ * Реализация хранилища вопросов в виде локализованного CSV-файла
  */
 @Repository
 public class QuestionDaoCsvImpl implements QuestionDao {
@@ -23,7 +24,7 @@ public class QuestionDaoCsvImpl implements QuestionDao {
 
     public QuestionDaoCsvImpl(@Value("${application.csv-resource-name}") String resourceName,
                               QuestionMapper questionMapper) {
-        this.resourceName = resourceName;
+        this.resourceName = MessageFormat.format(resourceName, "ru");
         this.questionMapper = questionMapper;
     }
 

@@ -2,7 +2,11 @@ package ru.otus.homework20210407.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.commons.util.StringUtils;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.MessageSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,11 +17,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("Класс InteractionServiceConsoleImpl")
+@ExtendWith(MockitoExtension.class)
 class InteractionServiceConsoleImplTest {
 
     private static final String ANY_PROMPT = "Prompt";
     private static final String TEST_TEXT = "Test text";
     private static final String TEST_INPUT_STRING = "Test in";
+    @Mock
+    private MessageSource messageSource;
 
     /**
      * Чтение заданной строки из System.in
@@ -26,7 +33,8 @@ class InteractionServiceConsoleImplTest {
     void readString() {
         var interactionService = new InteractionServiceConsoleImpl(
                 new ByteArrayInputStream(TEST_INPUT_STRING.getBytes()),
-                new PrintStream(new ByteArrayOutputStream()));
+                new PrintStream(new ByteArrayOutputStream()),
+                messageSource);
         assertEquals(TEST_INPUT_STRING,
                 interactionService.readString(ANY_PROMPT));
     }
@@ -40,21 +48,24 @@ class InteractionServiceConsoleImplTest {
         // число меньше интервала
         var interactionService = new InteractionServiceConsoleImpl(
                 new ByteArrayInputStream("0\n1".getBytes()),
-                new PrintStream(new ByteArrayOutputStream()));
+                new PrintStream(new ByteArrayOutputStream()),
+                messageSource);
         assertEquals(1,
                 interactionService.readIntByInterval(ANY_PROMPT, interval));
 
         // число из интервала
         interactionService = new InteractionServiceConsoleImpl(
                 new ByteArrayInputStream("3".getBytes()),
-                new PrintStream(new ByteArrayOutputStream()));
+                new PrintStream(new ByteArrayOutputStream()),
+                messageSource);
         assertEquals(3,
                 interactionService.readIntByInterval(ANY_PROMPT, interval));
 
         // число больше интервала
         interactionService = new InteractionServiceConsoleImpl(
                 new ByteArrayInputStream("42\n4".getBytes()),
-                new PrintStream(new ByteArrayOutputStream()));
+                new PrintStream(new ByteArrayOutputStream()),
+                messageSource);
         assertEquals(4,
                 interactionService.readIntByInterval(ANY_PROMPT, interval));
     }
@@ -67,7 +78,8 @@ class InteractionServiceConsoleImplTest {
         final var out = new ByteArrayOutputStream();
         var interactionService = new InteractionServiceConsoleImpl(
                 new ByteArrayInputStream("".getBytes()),
-                new PrintStream(out));
+                new PrintStream(out),
+                messageSource);
         interactionService.outputString(TEST_TEXT);
         final var text = out.toString();
         assertTrue(StringUtils.isNotBlank(text));
