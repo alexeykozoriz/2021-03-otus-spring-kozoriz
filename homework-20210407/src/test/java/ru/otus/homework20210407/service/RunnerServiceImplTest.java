@@ -7,7 +7,6 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.MessageSource;
 import ru.otus.homework20210407.domain.AnswerByOption;
 import ru.otus.homework20210407.domain.AnswerByText;
 import ru.otus.homework20210407.domain.Question;
@@ -32,7 +31,7 @@ class RunnerServiceImplTest {
     @Mock
     private InteractionService interactionService;
     @Mock
-    private MessageSource messageSource;
+    private LocalizationService localizationService;
     @InjectMocks
     private RunnerServiceImpl runnerService;
 
@@ -52,14 +51,14 @@ class RunnerServiceImplTest {
                 new AnswerByOption(questions.get(1), 3));
         when(answersService.getAnswers(questions)).thenReturn(answers);
         when(testingService.isTestingPassed(answers)).thenReturn(true);
-        when(messageSource.getMessage(any(), any(), any())).thenReturn("Text : SUCCESS");
+        when(localizationService.getLocalizedString(any(), any())).thenReturn("Text : SUCCESS");
         runnerService.runTesting();
-        InOrder inOrder = inOrder(questionsService, answersService, testingService, interactionService, messageSource);
+        InOrder inOrder = inOrder(questionsService, answersService, testingService, interactionService, localizationService);
         inOrder.verify(questionsService, times(1)).findAllQuestions();
         inOrder.verify(questionsService, times(1)).assertQuestionsIsValid(questions);
         inOrder.verify(answersService, times(1)).getAnswers(questions);
         inOrder.verify(testingService, times(1)).isTestingPassed(answers);
-        inOrder.verify(messageSource, times(1)).getMessage(any(), any(), any());
+        inOrder.verify(localizationService, times(1)).getLocalizedString(any(), any());
         inOrder.verify(interactionService, times(1)).outputString("Text : SUCCESS");
     }
 

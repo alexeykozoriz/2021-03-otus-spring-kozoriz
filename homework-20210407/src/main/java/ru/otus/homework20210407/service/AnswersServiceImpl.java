@@ -1,7 +1,6 @@
 package ru.otus.homework20210407.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import ru.otus.homework20210407.domain.Answer;
@@ -12,7 +11,6 @@ import ru.otus.homework20210407.domain.Question;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Реализация по-умолчанию.
@@ -24,28 +22,28 @@ import java.util.Locale;
 public class AnswersServiceImpl implements AnswersService {
 
     private final InteractionService interactionService;
-    private final MessageSource messageSource;
+    private final LocalizationService localizationService;
 
     @Override
     public List<Answer> getAnswers(List<Question> questions) {
         List<Answer> results = new ArrayList<>();
         for (Question question : questions) {
-            final var questionPrompt = MessageFormat.format("{0}) {1}: ", question.getNumber(), question.getText());
+            final var prompt = MessageFormat.format("{0}) {1}: ", question.getNumber(), question.getText());
             final var options = question.getOptions();
             if (CollectionUtils.isEmpty(options)) {
-                results.add(
-                        new AnswerByText(question,
-                                interactionService.readString(questionPrompt)));
+                final var textAnswer = interactionService.readString(prompt);
+                final var answerByText = new AnswerByText(question, textAnswer);
+                results.add(answerByText);
             } else {
-                interactionService.outputString(questionPrompt);
+                interactionService.outputString(prompt);
                 for (var i = 0; i < question.getOptions().size(); i++) {
-                    interactionService.outputString(
-                            MessageFormat.format("{0}) {1}", i + 1, question.getOptions().get(i)));
+                    final var optionText = MessageFormat.format("{0}) {1}", i + 1, question.getOptions().get(i));
+                    interactionService.outputString(optionText);
                 }
-                results.add(
-                        new AnswerByOption(question,
-                                interactionService.readIntByInterval(
-                                        messageSource.getMessage("option-prompt", null, Locale.forLanguageTag("ru-RU")), options.size())));
+                final var optionPrompt = localizationService.getLocalizedString("option-prompt");
+                final var optionNumber = interactionService.readIntByInterval(optionPrompt, options.size());
+                final var answerByOption = new AnswerByOption(question, optionNumber);
+                results.add(answerByOption);
             }
         }
         return results;

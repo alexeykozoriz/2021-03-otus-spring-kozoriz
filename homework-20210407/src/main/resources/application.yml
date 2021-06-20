@@ -1,5 +1,6 @@
 application:
-  csv-resource-name: "/questions_{0}.csv"
+  csv-resource-name: "/questions-{0}.csv"
+  locale: "ru-RU"
 
 spring:
   messages:

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.MessageSource;
 import ru.otus.homework20210407.domain.Question;
 
 import java.util.Collections;
@@ -24,7 +23,7 @@ class AnswersServiceImplTest {
     @Mock
     private InteractionService interactionService;
     @Mock
-    private MessageSource messageSource;
+    private LocalizationService localizationService;
     @InjectMocks
     private AnswersServiceImpl answersService;
 

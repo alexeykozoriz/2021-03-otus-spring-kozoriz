@@ -23,8 +23,9 @@ public class QuestionDaoCsvImpl implements QuestionDao {
     private final QuestionMapper questionMapper;
 
     public QuestionDaoCsvImpl(@Value("${application.csv-resource-name}") String resourceName,
+                              @Value("${application.locale}") String resourceLocale,
                               QuestionMapper questionMapper) {
-        this.resourceName = MessageFormat.format(resourceName, "ru");
+        this.resourceName = MessageFormat.format(resourceName, resourceLocale);
         this.questionMapper = questionMapper;
     }
 
