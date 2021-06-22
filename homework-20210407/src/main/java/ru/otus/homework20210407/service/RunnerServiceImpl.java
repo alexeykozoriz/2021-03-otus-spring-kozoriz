@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import ru.otus.homework20210407.domain.AnswerByText;
 
-import java.text.MessageFormat;
 import java.util.stream.Collectors;
 
 /**
@@ -19,20 +18,24 @@ public class RunnerServiceImpl implements RunnerService {
     private final AnswersService answersService;
     private final TestingService testingService;
     private final InteractionService interactionService;
+    private final LocalizationService localizationService;
 
     @Override
     public void runTesting() throws Exception {
-        final var allAnswers = answersService.getAnswers(
-                questionsService.findAllQuestions());
+        final var allQuestions = questionsService.findAllQuestions();
+        questionsService.assertQuestionsIsValid(allQuestions);
+        final var allAnswers = answersService.getAnswers(allQuestions);
         if (CollectionUtils.isEmpty(allAnswers)) {
             return;
         }
-        interactionService.outputString(
-                MessageFormat.format("{0} : {1}",
-                        allAnswers.stream()
-                                .filter(AnswerByText.class::isInstance)
-                                .map(p -> ((AnswerByText) p).getText())
-                                .collect(Collectors.joining(" ")),
-                        testingService.isTestingPassed(allAnswers) ? "SUCCESS" : "FAIL"));
+        final var resultMessageKey = testingService.isTestingPassed(allAnswers)
+                ? "success"
+                : "fail";
+        final var textInfo = allAnswers.stream()
+                .filter(AnswerByText.class::isInstance)
+                .map(p -> ((AnswerByText) p).getText())
+                .collect(Collectors.joining(" "));
+        final var result = localizationService.getLocalizedString(resultMessageKey, textInfo);
+        interactionService.outputString(result);
     }
 }

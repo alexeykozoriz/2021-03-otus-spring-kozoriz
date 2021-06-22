@@ -23,15 +23,17 @@ import static org.mockito.Mockito.*;
 class RunnerServiceImplTest {
 
     @Mock
-    QuestionsService questionsService;
+    private QuestionsService questionsService;
     @Mock
-    AnswersService answersService;
+    private AnswersService answersService;
     @Mock
-    TestingService testingService;
+    private TestingService testingService;
     @Mock
-    InteractionService interactionService;
+    private InteractionService interactionService;
+    @Mock
+    private LocalizationService localizationService;
     @InjectMocks
-    RunnerServiceImpl runnerService;
+    private RunnerServiceImpl runnerService;
 
     /**
      * Выполнение алгоритма тестирования
@@ -49,11 +51,14 @@ class RunnerServiceImplTest {
                 new AnswerByOption(questions.get(1), 3));
         when(answersService.getAnswers(questions)).thenReturn(answers);
         when(testingService.isTestingPassed(answers)).thenReturn(true);
+        when(localizationService.getLocalizedString(any(), any())).thenReturn("Text : SUCCESS");
         runnerService.runTesting();
-        InOrder inOrder = inOrder(questionsService, answersService, testingService, interactionService);
+        InOrder inOrder = inOrder(questionsService, answersService, testingService, interactionService, localizationService);
         inOrder.verify(questionsService, times(1)).findAllQuestions();
+        inOrder.verify(questionsService, times(1)).assertQuestionsIsValid(questions);
         inOrder.verify(answersService, times(1)).getAnswers(questions);
         inOrder.verify(testingService, times(1)).isTestingPassed(answers);
+        inOrder.verify(localizationService, times(1)).getLocalizedString(any(), any());
         inOrder.verify(interactionService, times(1)).outputString("Text : SUCCESS");
     }
 

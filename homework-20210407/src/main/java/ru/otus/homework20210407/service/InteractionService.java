@@ -20,7 +20,7 @@ public interface InteractionService {
      * @param interval максимальное значение
      * @return целое число
      */
-    Integer readIntByInterval(String prompt, int interval);
+    int readIntByInterval(String prompt, int interval);
 
     /**
      * Вывод строки
