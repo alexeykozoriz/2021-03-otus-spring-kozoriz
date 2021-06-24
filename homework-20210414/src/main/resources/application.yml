@@ -1,0 +1,7 @@
+application:
+  csv-resource-name: "/questions-{0}.csv"
+  locale: "ru-RU"
+
+spring:
+  messages:
+    basename: i18n.messages
