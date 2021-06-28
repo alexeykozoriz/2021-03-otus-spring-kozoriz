@@ -1,7 +1,6 @@
 package ru.otus.homework20210421.dao;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -9,8 +8,6 @@ import org.springframework.stereotype.Repository;
 import ru.otus.homework20210421.domain.Book;
 import ru.otus.homework20210421.util.BookMapper;
 
-import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -21,13 +18,12 @@ import java.util.Objects;
 @Repository
 @RequiredArgsConstructor
 public class BookDaoJdbcImpl implements BookDao {
-    private final JdbcOperations jdbcOperations;
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
 
     @Override
     public int count() {
-        final var count = jdbcOperations.queryForObject(
-                "select count(*) from books", Integer.class);
+        final var count = namedParameterJdbcOperations.getJdbcOperations().queryForObject(
+                "select count(id) from books", Integer.class);
         return count == null ? 0 : count;
     }
 
@@ -48,7 +44,7 @@ public class BookDaoJdbcImpl implements BookDao {
 
     @Override
     public void update(Book book) {
-        final Map<String, ? extends Serializable> params = Map.of(
+        final Map<String, Object> params = Map.of(
                 "id", book.getId(),
                 "title", book.getTitle(),
                 "publication_year", book.getPublicationYear(),
@@ -61,21 +57,21 @@ public class BookDaoJdbcImpl implements BookDao {
 
     @Override
     public Book getById(long id) {
-        final Map<String, Object> params = Collections.singletonMap("id", id);
+        final Map<String, Object> params = Map.of("id", id);
         return namedParameterJdbcOperations.queryForObject(
-                "select b.*, a.full_name as author, g.title as genre from books b join authors a on a.id = b.author_id join genres g on g.id = b.genre_id where b.id = :id", params, new BookMapper());
+                "select b.id, b.title, b.publication_year, b.author_id, b.genre_id, a.full_name as author, g.title as genre from books b left outer join authors a on a.id = b.author_id left outer join genres g on g.id = b.genre_id where b.id = :id", params, new BookMapper());
     }
 
     @Override
     public List<Book> getAll() {
-        return jdbcOperations.query(
-                "select b.*, a.full_name as author, g.title as genre from books b join authors a on a.id = b.author_id join genres g on g.id = b.genre_id",
+        return namedParameterJdbcOperations.getJdbcOperations().query(
+                "select b.id, b.title, b.publication_year, b.author_id, b.genre_id, a.full_name as author, g.title as genre from books b left outer join authors a on a.id = b.author_id left outer join genres g on g.id = b.genre_id",
                 new BookMapper());
     }
 
     @Override
     public void deleteById(long id) {
-        final Map<String, Object> params = Collections.singletonMap("id", id);
+        final Map<String, Object> params = Map.of("id", id);
         namedParameterJdbcOperations.update(
                 "delete from books where id = :id",
                 params);

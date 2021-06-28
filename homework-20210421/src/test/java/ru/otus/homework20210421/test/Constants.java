@@ -51,6 +51,15 @@ public final class Constants {
                     .title(GENRE_TITLE_MOCK)
                     .build())
             .build();
+    public static final int EXPECTED_AUTHORS_COUNT = 6;
+    public static final long EXPECTED_INSERTED_AUTHOR_ID = EXPECTED_AUTHORS_COUNT + 1;
+    public static final String JOHN_DOE = "John Doe";
+    public static final int EXPECTED_GENRES_COUNT = 4;
+    public static final long EXPECTED_INSERTED_GENRE_ID = EXPECTED_GENRES_COUNT + 1;
+    public static final String TESTING_FICTON = "Testing fiction";
+    public static final int EXPECTED_BOOKS_COUNT = 16;
+    public static final long EXPECTED_INSERTED_BOOK_ID = EXPECTED_BOOKS_COUNT + 1;
+    public static final String THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG = "The quick brown fox jumps over the lazy dog";
 
     private Constants() {
 
