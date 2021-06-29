@@ -62,7 +62,7 @@ public class AuthorDaoJdbcImpl implements AuthorDao {
 
     @Override
     public List<Author> getAll() {
-        return namedParameterJdbcOperations.getJdbcOperations().query("select * from authors", new AuthorMapper());
+        return namedParameterJdbcOperations.getJdbcOperations().query("select id, full_name from authors", new AuthorMapper());
     }
 
     @Override

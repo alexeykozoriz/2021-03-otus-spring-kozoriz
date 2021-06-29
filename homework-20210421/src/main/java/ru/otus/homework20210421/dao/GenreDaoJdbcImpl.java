@@ -62,7 +62,7 @@ public class GenreDaoJdbcImpl implements GenreDao {
 
     @Override
     public List<Genre> getAll() {
-        return namedParameterJdbcOperations.getJdbcOperations().query("select * from genres", new GenreMapper());
+        return namedParameterJdbcOperations.getJdbcOperations().query("select id, title from genres", new GenreMapper());
     }
 
     @Override
