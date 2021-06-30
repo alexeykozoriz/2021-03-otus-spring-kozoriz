@@ -65,7 +65,7 @@ public final class Constants {
             .build();
     public static final int EXPECTED_AUTHORS_COUNT = 1;
     public static final long EXPECTED_INSERTED_AUTHOR_ID = EXPECTED_AUTHORS_COUNT + 1;
-    public static final String JOHN_DOE = "John Doe";
+    public static final String JANE_DOE = "Jane Doe";
     public static final int EXPECTED_GENRES_COUNT = 1;
     public static final long EXPECTED_INSERTED_GENRE_ID = EXPECTED_GENRES_COUNT + 1;
     public static final String TESTING_FICTON = "Testing fiction";

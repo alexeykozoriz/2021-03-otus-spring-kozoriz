@@ -19,23 +19,53 @@ class GenreDaoJdbcImplTest {
     private GenreDao genreDao;
 
     @Test
-    @DisplayName("Методы count(), insert(), update(), getById(), getByFullname(), getAll(), deleteById()")
-    void test() {
-        final var counted = genreDao.count();
+    @DisplayName("Метод count()")
+    void count() {
+        var counted = genreDao.count();
         assertEquals(EXPECTED_GENRES_COUNT, counted);
-        final var insertedId = genreDao.insert(GENRE_MOCK);
+    }
+
+    @Test
+    @DisplayName("Метод insert()")
+    void insert() {
+        var insertedId = genreDao.insert(GENRE_MOCK);
         assertEquals(EXPECTED_INSERTED_GENRE_ID, insertedId);
-        final var genre = Genre.builder()
-                .id(insertedId)
+    }
+
+    @Test
+    @DisplayName("Метод update()")
+    void update() {
+        var genre = Genre.builder()
+                .id(EXPECTED_INSERTED_GENRE_ID)
                 .title(TESTING_FICTON)
                 .build();
         assertDoesNotThrow(() -> genreDao.update(genre));
-        final var foundById = genreDao.getById(insertedId);
-        assertEquals(TESTING_FICTON, foundById.getTitle());
-        final var foundByTitle = genreDao.getByTitle(TESTING_FICTON);
-        assertNotNull(foundByTitle);
-        final var foundAll = genreDao.getAll();
-        assertEquals(EXPECTED_INSERTED_GENRE_ID, foundAll.size());
+    }
+
+    @Test
+    @DisplayName("Метод getById()")
+    void getById() {
+        var found = genreDao.getById(EXPECTED_GENRES_COUNT);
+        assertEquals(TESTING_FICTON, found.getTitle());
+    }
+
+    @Test
+    @DisplayName("Метод getByFullname()")
+    void getByFullname() {
+        var found = genreDao.getByTitle(TESTING_FICTON);
+        assertNotNull(found);
+    }
+
+    @Test
+    @DisplayName("Метод getAll()")
+    void getAll() {
+        var found = genreDao.getAll();
+        assertEquals(EXPECTED_GENRES_COUNT, found.size());
+    }
+
+    @Test
+    @DisplayName("Метод deleteById()")
+    void deleteById() {
         assertDoesNotThrow(() -> genreDao.deleteById(EXPECTED_INSERTED_AUTHOR_ID));
     }
 }

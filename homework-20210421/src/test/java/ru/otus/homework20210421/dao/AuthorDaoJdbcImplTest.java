@@ -19,23 +19,53 @@ class AuthorDaoJdbcImplTest {
     private AuthorDao authorDao;
 
     @Test
-    @DisplayName("Методы count(), insert(), update(), getById(), getByFullname(), getAll(), deleteById()")
-    void test() {
-        final var counted = authorDao.count();
+    @DisplayName("Метод count()")
+    void count() {
+        var counted = authorDao.count();
         assertEquals(EXPECTED_AUTHORS_COUNT, counted);
-        final var insertedId = authorDao.insert(AUTHOR_MOCK);
+    }
+
+    @Test
+    @DisplayName("Метод insert()")
+    void insert() {
+        var insertedId = authorDao.insert(AUTHOR_MOCK);
         assertEquals(EXPECTED_INSERTED_AUTHOR_ID, insertedId);
-        final var author = Author.builder()
+    }
+
+    @Test
+    @DisplayName("Метод update()")
+    void update() {
+        var author = Author.builder()
                 .id(EXPECTED_INSERTED_AUTHOR_ID)
-                .fullName(JOHN_DOE)
+                .fullName(JANE_DOE)
                 .build();
         assertDoesNotThrow(() -> authorDao.update(author));
-        final var foundById = authorDao.getById(EXPECTED_INSERTED_AUTHOR_ID);
-        assertEquals(JOHN_DOE, foundById.getFullName());
-        final var foundByFullname = authorDao.getByFullname(JOHN_DOE);
-        assertNotNull(foundByFullname);
-        final var foundAll = authorDao.getAll();
-        assertEquals(EXPECTED_INSERTED_AUTHOR_ID, foundAll.size());
+    }
+
+    @Test
+    @DisplayName("Метод getById()")
+    void getById() {
+        var found = authorDao.getById(EXPECTED_AUTHORS_COUNT);
+        assertEquals(JANE_DOE, found.getFullName());
+    }
+
+    @Test
+    @DisplayName("Метод getByFullname()")
+    void getByFullname() {
+        var found = authorDao.getByFullname(JANE_DOE);
+        assertNotNull(found);
+    }
+
+    @Test
+    @DisplayName("Метод getAll()")
+    void getAll() {
+        var found = authorDao.getAll();
+        assertEquals(EXPECTED_AUTHORS_COUNT, found.size());
+    }
+
+    @Test
+    @DisplayName("Метод deleteById()")
+    void deleteById() {
         assertDoesNotThrow(() -> authorDao.deleteById(EXPECTED_INSERTED_AUTHOR_ID));
     }
 }
