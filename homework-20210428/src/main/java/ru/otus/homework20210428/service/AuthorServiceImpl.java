@@ -2,10 +2,10 @@ package ru.otus.homework20210428.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.homework20210428.domain.Author;
 import ru.otus.homework20210428.repository.AuthorRepository;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -18,7 +18,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<Author> read() {
         return authorRepository.findAll();

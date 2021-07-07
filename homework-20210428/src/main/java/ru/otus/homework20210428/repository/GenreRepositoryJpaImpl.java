@@ -1,6 +1,5 @@
 package ru.otus.homework20210428.repository;
 
-import lombok.val;
 import org.springframework.stereotype.Repository;
 import ru.otus.homework20210428.domain.Genre;
 
@@ -47,10 +46,8 @@ public class GenreRepositoryJpaImpl implements GenreRepository {
 
     @Override
     public void deleteById(long id) {
-        val found = findById(id);
-        if (found.isEmpty()) {
-            return;
-        }
-        entityManager.remove(found.get());
+        final var query = entityManager.createQuery("delete from Genre g where g.id = :id");
+        query.setParameter("id", id);
+        query.executeUpdate();
     }
 }

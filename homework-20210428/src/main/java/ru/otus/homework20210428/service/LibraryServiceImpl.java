@@ -9,7 +9,6 @@ import ru.otus.homework20210428.domain.Genre;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.util.stream.Collectors;
 
 /**
  * Реализация по-умолчанию.
@@ -45,8 +44,8 @@ public class LibraryServiceImpl implements LibraryService {
     }
 
     @Override
-    public void removeBook() {
-        final var id = interactionService.readNumberByInterval("Book id: ", 1, Long.MAX_VALUE);
+    public void removeBook(long id) {
+        commentsService.deleteByBookId(id);
         bookService.delete(id);
     }
 
@@ -77,9 +76,8 @@ public class LibraryServiceImpl implements LibraryService {
     public void printBooks() {
         var books = bookService.read();
         for (Book book : books) {
-            final var comments = book.getComments().stream().map(this::getCommentInfo).collect(Collectors.joining("\n"));
-            final var info = MessageFormat.format("{0}) \"{1}\" {2}, {3}, {4}\n{5}",
-                    book.getId(), book.getTitle(), book.getAuthor().getFullName(), Integer.toString(book.getPublicationYear()), book.getGenre().getTitle(), comments);
+            final var info = MessageFormat.format("{0}) \"{1}\" {2}, {3}, {4}",
+                    book.getId(), book.getTitle(), book.getAuthor().getFullName(), Integer.toString(book.getPublicationYear()), book.getGenre().getTitle());
             interactionService.outputString(info);
         }
     }
@@ -114,22 +112,16 @@ public class LibraryServiceImpl implements LibraryService {
         final var comment = BookComment.builder()
                 .text(text)
                 .author(author)
+                .book(bookOptional.get())
                 .build();
         commentsService.save(comment);
-        final var book = bookOptional.get();
-        book.getComments().add(comment);
-        bookService.save(book);
         interactionService.outputString(MessageFormat.format("Comment created with id = {0}", comment.getId()));
     }
 
     @Override
     public void printComments(long bookId) {
-        var bookOptional = bookService.read(bookId);
-        if (bookOptional.isEmpty()) {
-            interactionService.outputString("Book not found");
-            return;
-        }
-        for (BookComment comment : bookOptional.get().getComments()) {
+        final var commentsByBookId = commentsService.findByBookId(bookId);
+        for (BookComment comment : commentsByBookId) {
             final var info = getCommentInfo(comment);
             interactionService.outputString(info);
         }

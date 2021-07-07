@@ -1,11 +1,12 @@
 package ru.otus.homework20210428.repository;
 
-import lombok.val;
 import org.springframework.stereotype.Repository;
 import ru.otus.homework20210428.domain.Book;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,15 +35,16 @@ public class BookRepositoryJpaImpl implements BookRepository {
 
     @Override
     public List<Book> findAll() {
-        return entityManager.createQuery("select b from Book b", Book.class).getResultList();
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("book-author-genre-entity-graph");
+        TypedQuery<Book> query = entityManager.createQuery("select b from Book b", Book.class);
+        query.setHint("javax.persistence.fetchgraph", entityGraph);
+        return query.getResultList();
     }
 
     @Override
     public void deleteById(long id) {
-        val found = findById(id);
-        if (found.isEmpty()) {
-            return;
-        }
-        entityManager.remove(found.get());
+        final var query = entityManager.createQuery("delete from Book b where b.id = :id");
+        query.setParameter("id", id);
+        query.executeUpdate();
     }
 }

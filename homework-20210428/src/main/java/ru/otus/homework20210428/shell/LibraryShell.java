@@ -26,8 +26,8 @@ public class LibraryShell {
      * Удаление книги
      */
     @ShellMethod(key = {"remove-book", "rb"}, value = "Remove book")
-    private void removeBook() {
-        libraryService.removeBook();
+    private void removeBook(long bookId) {
+        libraryService.removeBook(bookId);
     }
 
     /**

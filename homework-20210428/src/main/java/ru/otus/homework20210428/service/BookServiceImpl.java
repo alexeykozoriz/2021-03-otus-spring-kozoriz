@@ -3,12 +3,12 @@ package ru.otus.homework20210428.service;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.homework20210428.domain.Book;
 import ru.otus.homework20210428.repository.AuthorRepository;
 import ru.otus.homework20210428.repository.BookRepository;
 import ru.otus.homework20210428.repository.GenreRepository;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,13 +45,13 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Optional<Book> read(long id) {
         return bookRepository.findById(id);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<Book> read() {
         return bookRepository.findAll();

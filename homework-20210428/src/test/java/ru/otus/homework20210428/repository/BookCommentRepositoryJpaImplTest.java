@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Import;
 import ru.otus.homework20210428.domain.BookComment;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ru.otus.homework20210428.test.MockFactory.createBook;
 import static ru.otus.homework20210428.test.MockFactory.createBookComment;
 
 @DisplayName("Хранилище комментариев (JPA)")
@@ -33,31 +34,29 @@ class BookCommentRepositoryJpaImplTest {
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
-    @DisplayName("Поиск по идентификатору")
+    @DisplayName("Поиск по идентификатору книги")
     @Test
     void findById() {
+        val expectedBook = createBook();
+        entityManager.persist(expectedBook);
         val expected = createBookComment();
+        expected.setBook(expectedBook);
         entityManager.persist(expected);
-        val actual = repositoryJpa.findById(expected.getId());
-        assertThat(actual).isPresent().get().usingRecursiveComparison().isEqualTo(expected);
-    }
-
-    @DisplayName("Поиск всех")
-    @Test
-    void findAll() {
-        val expected = createBookComment();
-        entityManager.persist(expected);
-        val actuals = repositoryJpa.findAll();
-        assertThat(actuals.size()).isEqualTo(1);
+        val actual = repositoryJpa.findByBookId(expected.getBook().getId());
+        assertThat(actual).isNotEmpty();
+        assertThat(actual.get(0)).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @DisplayName("Удаление")
     @Test
     void deleteById() {
+        val expectedBook = createBook();
+        entityManager.persist(expectedBook);
         val expected = createBookComment();
+        expected.setBook(expectedBook);
         entityManager.persist(expected);
-        repositoryJpa.deleteById(expected.getId());
-        val actual = entityManager.find(BookComment.class, expected.getId());
+        repositoryJpa.deleteByBookId(expectedBook.getId());
+        val actual = entityManager.persistFlushFind(expected);
         assertThat(actual).isNull();
     }
 }

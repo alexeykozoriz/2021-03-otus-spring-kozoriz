@@ -1,6 +1,5 @@
 package ru.otus.homework20210428.repository;
 
-import lombok.val;
 import org.springframework.stereotype.Repository;
 import ru.otus.homework20210428.domain.Author;
 
@@ -47,10 +46,8 @@ public class AuthorRepositoryJpaImpl implements AuthorRepository {
 
     @Override
     public void deleteById(long id) {
-        val found = findById(id);
-        if (found.isEmpty()) {
-            return;
-        }
-        entityManager.remove(found.get());
+        final var query = entityManager.createQuery("delete from Author a where a.id = :id");
+        query.setParameter("id", id);
+        query.executeUpdate();
     }
 }

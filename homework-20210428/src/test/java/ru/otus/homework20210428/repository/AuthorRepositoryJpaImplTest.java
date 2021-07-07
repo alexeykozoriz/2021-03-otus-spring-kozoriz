@@ -66,7 +66,7 @@ class AuthorRepositoryJpaImplTest {
         val expected = createAuthor();
         entityManager.persist(expected);
         repositoryJpa.deleteById(expected.getId());
-        val actual = entityManager.find(Author.class, expected.getId());
+        val actual = entityManager.persistFlushFind(expected);
         assertThat(actual).isNull();
     }
 }

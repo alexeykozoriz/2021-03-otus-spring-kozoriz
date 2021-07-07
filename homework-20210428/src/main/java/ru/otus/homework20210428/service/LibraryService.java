@@ -11,8 +11,10 @@ public interface LibraryService {
 
     /**
      * Удаление книги
+     *
+     * @param id идентификатор
      */
-    void removeBook();
+    void removeBook(long id);
 
     /**
      * Редактирование книги

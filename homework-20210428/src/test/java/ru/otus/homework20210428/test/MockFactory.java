@@ -5,8 +5,6 @@ import ru.otus.homework20210428.domain.Book;
 import ru.otus.homework20210428.domain.BookComment;
 import ru.otus.homework20210428.domain.Genre;
 
-import java.util.Collections;
-
 /**
  * Фабрика тестовых объектов
  */
@@ -62,7 +60,6 @@ public final class MockFactory {
                 .publicationYear(YEAR_2021)
                 .author(createAuthor())
                 .genre(createGenre())
-                .comments(Collections.singletonList(createBookComment()))
                 .build();
     }
 }

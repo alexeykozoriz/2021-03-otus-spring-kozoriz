@@ -1,13 +1,13 @@
 package ru.otus.homework20210428.repository;
 
-import lombok.val;
 import org.springframework.stereotype.Repository;
 import ru.otus.homework20210428.domain.BookComment;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Реализация через JPA
@@ -28,21 +28,18 @@ public class BookCommentRepositoryJpaImpl implements BookCommentRepository {
     }
 
     @Override
-    public Optional<BookComment> findById(long id) {
-        return Optional.ofNullable(entityManager.find(BookComment.class, id));
+    public List<BookComment> findByBookId(long bookId) {
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("book-comment-entity-graph");
+        TypedQuery<BookComment> query = entityManager.createQuery("select bc from BookComment bc where bc.book.id = :bookId", BookComment.class);
+        query.setParameter("bookId", bookId);
+        query.setHint("javax.persistence.fetchgraph", entityGraph);
+        return query.getResultList();
     }
 
     @Override
-    public List<BookComment> findAll() {
-        return entityManager.createQuery("select bc from BookComment bc", BookComment.class).getResultList();
-    }
-
-    @Override
-    public void deleteById(long id) {
-        val found = findById(id);
-        if (found.isEmpty()) {
-            return;
-        }
-        entityManager.remove(found.get());
+    public void deleteByBookId(long bookId) {
+        final var query = entityManager.createQuery("delete from BookComment bc where bc.book.id = :bookId");
+        query.setParameter("bookId", bookId);
+        query.executeUpdate();
     }
 }

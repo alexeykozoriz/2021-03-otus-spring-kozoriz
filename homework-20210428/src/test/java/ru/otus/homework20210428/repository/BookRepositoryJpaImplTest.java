@@ -57,7 +57,7 @@ class BookRepositoryJpaImplTest {
         val expected = createBook();
         entityManager.persist(expected);
         repositoryJpa.deleteById(expected.getId());
-        val actual = entityManager.find(Book.class, expected.getId());
+        val actual = entityManager.persistFlushFind(expected);
         assertThat(actual).isNull();
     }
 }

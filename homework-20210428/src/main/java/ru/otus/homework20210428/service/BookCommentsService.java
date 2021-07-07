@@ -2,6 +2,8 @@ package ru.otus.homework20210428.service;
 
 import ru.otus.homework20210428.domain.BookComment;
 
+import java.util.List;
+
 /**
  * Интерфейс сервисного класса для работы с комментариями к книгам
  */
@@ -15,9 +17,17 @@ public interface BookCommentsService {
     void save(BookComment comment);
 
     /**
-     * Удаление комментария
+     * Получение всех комментариев к книге
      *
-     * @param id идентификатор
+     * @param bookId идентификатор книги
+     * @return список
      */
-    void delete(long id);
+    List<BookComment> findByBookId(long bookId);
+
+    /**
+     * Удаление комментариев по книге
+     *
+     * @param bookId идентификатор книги
+     */
+    void deleteByBookId(long bookId);
 }
