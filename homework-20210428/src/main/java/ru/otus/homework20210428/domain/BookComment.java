@@ -1,0 +1,34 @@
+package ru.otus.homework20210428.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+/**
+ * Комментарий к книге
+ */
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
+@Entity
+@Table(name = "book_comments")
+@NamedEntityGraph(name = "book-comment-entity-graph", attributeNodes = {@NamedAttributeNode("book")})
+public class BookComment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column
+    private String author;
+
+    @Column(length = 1024)
+    private String text;
+
+    @ManyToOne
+    @JoinColumn(name = "book_id", referencedColumnName = "id")
+    private Book book;
+}
