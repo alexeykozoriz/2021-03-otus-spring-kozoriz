@@ -8,8 +8,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ru.otus.homework20210517.domain.Book;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.otus.homework20210517.test.MockFactory.createBook;
 
@@ -47,7 +45,7 @@ class BookRepositoryTest {
     void findAll() {
         val expected = createBook();
         entityManager.persist(expected);
-        val actuals = (List<Book>) repositoryJpa.findAll();
+        val actuals = repositoryJpa.findAll();
         assertThat(actuals.size()).isEqualTo(17);
     }
 

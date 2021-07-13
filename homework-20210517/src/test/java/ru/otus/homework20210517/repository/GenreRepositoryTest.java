@@ -8,8 +8,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ru.otus.homework20210517.domain.Genre;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.otus.homework20210517.test.MockFactory.createGenre;
 
@@ -47,7 +45,7 @@ class GenreRepositoryTest {
     void findByFullName() {
         val expected = createGenre();
         entityManager.persist(expected);
-        val actual = repositoryJpa.findByTitle(expected.getTitle());
+        val actual = repositoryJpa.findByTitleEquals(expected.getTitle());
         assertThat(actual).isPresent().get().usingRecursiveComparison().isEqualTo(expected);
     }
 
@@ -56,7 +54,7 @@ class GenreRepositoryTest {
     void findAll() {
         val expected = createGenre();
         entityManager.persist(expected);
-        val actuals = (List<Genre>) repositoryJpa.findAll();
+        val actuals = repositoryJpa.findAll();
         assertThat(actuals.size()).isEqualTo(5);
     }
 

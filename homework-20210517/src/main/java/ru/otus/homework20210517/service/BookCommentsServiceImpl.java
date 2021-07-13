@@ -26,12 +26,12 @@ public class BookCommentsServiceImpl implements BookCommentsService {
     @Transactional(readOnly = true)
     @Override
     public List<BookComment> findByBookId(long bookId) {
-        return (List<BookComment>) commentRepository.findByBookId(bookId);
+        return commentRepository.findAllByBook_Id(bookId);
     }
 
     @Transactional
     @Override
     public void deleteByBookId(long bookId) {
-        commentRepository.deleteByBookId(bookId);
+        commentRepository.deleteAllByBook_Id(bookId);
     }
 }

@@ -8,8 +8,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ru.otus.homework20210517.domain.BookComment;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.otus.homework20210517.test.MockFactory.createBook;
 import static ru.otus.homework20210517.test.MockFactory.createBookComment;
@@ -42,7 +40,7 @@ class BookCommentRepositoryTest {
         val expected = createBookComment();
         expected.setBook(expectedBook);
         entityManager.persist(expected);
-        val actual = (List<BookComment>) repositoryJpa.findByBookId(expected.getBook().getId());
+        val actual = repositoryJpa.findAllByBook_Id(expected.getBook().getId());
         assertThat(actual).isNotEmpty();
         assertThat(actual.get(0)).usingRecursiveComparison().isEqualTo(expected);
     }
@@ -55,8 +53,8 @@ class BookCommentRepositoryTest {
         val expected = createBookComment();
         expected.setBook(expectedBook);
         entityManager.persist(expected);
-        repositoryJpa.deleteByBookId(expectedBook.getId());
-        val actual = entityManager.persistFlushFind(expected);
+        repositoryJpa.deleteAllByBook_Id(expectedBook.getId());
+        val actual = entityManager.find(BookComment.class, expected.getId());
         assertThat(actual).isNull();
     }
 }

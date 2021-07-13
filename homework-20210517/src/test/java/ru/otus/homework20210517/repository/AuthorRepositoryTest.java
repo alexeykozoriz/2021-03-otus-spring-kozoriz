@@ -8,8 +8,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ru.otus.homework20210517.domain.Author;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.otus.homework20210517.test.MockFactory.createAuthor;
 
@@ -47,7 +45,7 @@ class AuthorRepositoryTest {
     void findByFullName() {
         val expected = createAuthor();
         entityManager.persist(expected);
-        val actual = repositoryJpa.findByFullName(expected.getFullName());
+        val actual = repositoryJpa.findByFullNameEquals(expected.getFullName());
         assertThat(actual).isPresent().get().usingRecursiveComparison().isEqualTo(expected);
     }
 
@@ -56,7 +54,7 @@ class AuthorRepositoryTest {
     void findAll() {
         val expected = createAuthor();
         entityManager.persist(expected);
-        val actuals = (List<Author>) repositoryJpa.findAll();
+        val actuals = repositoryJpa.findAll();
         assertThat(actuals.size()).isEqualTo(7);
     }
 

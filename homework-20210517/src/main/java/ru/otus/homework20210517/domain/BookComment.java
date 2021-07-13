@@ -16,7 +16,6 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "book_comments")
-@NamedEntityGraph(name = "book-comment-entity-graph", attributeNodes = {@NamedAttributeNode("book")})
 public class BookComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

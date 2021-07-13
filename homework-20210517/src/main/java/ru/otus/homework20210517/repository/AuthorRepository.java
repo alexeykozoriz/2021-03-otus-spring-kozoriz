@@ -1,10 +1,9 @@
 package ru.otus.homework20210517.repository;
 
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import ru.otus.homework20210517.domain.Author;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -12,6 +11,7 @@ import java.util.Optional;
  */
 public interface AuthorRepository extends CrudRepository<Author, Long> {
 
-    @Query("select a from Author a where a.fullName like :fullName")
-    Optional<Author> findByFullName(@Param("fullName") String fullName);
+    Optional<Author> findByFullNameEquals(String fullName);
+
+    List<Author> findAll();
 }

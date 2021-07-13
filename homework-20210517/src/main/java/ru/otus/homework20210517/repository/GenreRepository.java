@@ -1,10 +1,9 @@
 package ru.otus.homework20210517.repository;
 
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import ru.otus.homework20210517.domain.Genre;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -12,6 +11,7 @@ import java.util.Optional;
  */
 public interface GenreRepository extends CrudRepository<Genre, Long> {
 
-    @Query("select g from Genre g where g.title like :title")
-    Optional<Genre> findByTitle(@Param("title") String title);
+    Optional<Genre> findByTitleEquals(String title);
+
+    List<Genre> findAll();
 }

@@ -29,11 +29,11 @@ public class BookServiceImpl implements BookService {
     public void save(Book book) {
         val author = book.getAuthor();
         if (author != null && author.getId() == null) {
-            authorRepository.findByFullName(author.getFullName()).ifPresent(book::setAuthor);
+            authorRepository.findByFullNameEquals(author.getFullName()).ifPresent(book::setAuthor);
         }
         val genre = book.getGenre();
         if (genre != null && genre.getId() == null) {
-            genreRepository.findByTitle(genre.getTitle()).ifPresent(book::setGenre);
+            genreRepository.findByTitleEquals(genre.getTitle()).ifPresent(book::setGenre);
         }
         bookRepository.save(book);
     }
@@ -53,6 +53,6 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     @Override
     public List<Book> read() {
-        return (List<Book>) bookRepository.findAll();
+        return bookRepository.findAll();
     }
 }
