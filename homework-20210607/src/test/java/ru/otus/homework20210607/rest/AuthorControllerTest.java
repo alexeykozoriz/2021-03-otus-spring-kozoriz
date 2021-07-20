@@ -52,7 +52,7 @@ class AuthorControllerTest {
     void getAll() throws Exception {
         var authors = List.of(createAuthor());
         given(authorService.read()).willReturn(authors);
-        var expected = authors.stream().map(AuthorDto::toDto).collect(Collectors.toList());
+        var expected = authors.stream().map(AuthorDto::fromAuthor).collect(Collectors.toList());
         mvc.perform(get("/authors"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expected)));

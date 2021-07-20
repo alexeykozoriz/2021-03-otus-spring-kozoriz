@@ -22,7 +22,7 @@ public class AuthorDto {
      * @param author автор
      * @return транспортный объект
      */
-    public static AuthorDto toDto(Author author) {
+    public static AuthorDto fromAuthor(Author author) {
         return AuthorDto.builder()
                 .id(author.getId())
                 .fullName(author.getFullName())
@@ -35,7 +35,7 @@ public class AuthorDto {
      * @param dto транспортный объект
      * @return автор
      */
-    public static Author toDomainObject(AuthorDto dto) {
+    public static Author fromDto(AuthorDto dto) {
         return Author.builder()
                 .id(dto.getId())
                 .fullName(dto.getFullName())

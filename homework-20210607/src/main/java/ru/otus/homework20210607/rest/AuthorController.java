@@ -20,6 +20,6 @@ public class AuthorController {
 
     @GetMapping("/authors")
     public List<AuthorDto> getAll() {
-        return authorService.read().stream().map(AuthorDto::toDto).collect(Collectors.toList());
+        return authorService.read().stream().map(AuthorDto::fromAuthor).collect(Collectors.toList());
     }
 }

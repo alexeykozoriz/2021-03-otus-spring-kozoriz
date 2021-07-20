@@ -21,7 +21,7 @@ public class GenreDto {
      * @param genre жанр
      * @return транспортный объект
      */
-    public static GenreDto toDto(Genre genre) {
+    public static GenreDto fromGenre(Genre genre) {
         return GenreDto.builder()
                 .id(genre.getId())
                 .title(genre.getTitle())
@@ -34,7 +34,7 @@ public class GenreDto {
      * @param dto транспортный объект
      * @return жанр
      */
-    public static Genre toDomainObject(GenreDto dto) {
+    public static Genre fromDto(GenreDto dto) {
         return Genre.builder()
                 .id(dto.getId())
                 .title(dto.getTitle())

@@ -19,12 +19,12 @@ public class BookCommentController {
 
     @GetMapping("/comments/{id}")
     public List<BookCommentDto> getAll(@PathVariable("id") long id) {
-        return bookCommentsService.findByBookId(id).stream().map(BookCommentDto::toDto).collect(Collectors.toList());
+        return bookCommentsService.findByBookId(id).stream().map(BookCommentDto::fromComment).collect(Collectors.toList());
     }
 
     @PostMapping("/comments")
     public Long postComment(@RequestBody BookCommentDto dto) {
-        var bookComment = BookCommentDto.toDomainObject(dto);
+        var bookComment = BookCommentDto.fromDto(dto);
         bookCommentsService.save(bookComment);
         return bookComment.getId();
     }

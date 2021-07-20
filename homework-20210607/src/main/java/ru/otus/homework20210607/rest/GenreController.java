@@ -20,6 +20,6 @@ public class GenreController {
 
     @GetMapping("/genres")
     public List<GenreDto> getAll() {
-        return genreService.read().stream().map(GenreDto::toDto).collect(Collectors.toList());
+        return genreService.read().stream().map(GenreDto::fromGenre).collect(Collectors.toList());
     }
 }

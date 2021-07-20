@@ -52,7 +52,7 @@ class GenreControllerTest {
     void getAll() throws Exception {
         var genres = List.of(createGenre());
         given(genreService.read()).willReturn(genres);
-        var expected = genres.stream().map(GenreDto::toDto).collect(Collectors.toList());
+        var expected = genres.stream().map(GenreDto::fromGenre).collect(Collectors.toList());
         mvc.perform(get("/genres"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expected)));

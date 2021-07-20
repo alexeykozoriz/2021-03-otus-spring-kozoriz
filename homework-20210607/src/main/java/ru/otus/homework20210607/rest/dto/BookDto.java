@@ -24,13 +24,13 @@ public class BookDto {
      * @param book книга
      * @return транспортный объект
      */
-    public static BookDto toDto(Book book) {
+    public static BookDto fromBook(Book book) {
         return BookDto.builder()
                 .id(book.getId())
                 .title(book.getTitle())
                 .publicationYear(book.getPublicationYear())
-                .author(AuthorDto.toDto(book.getAuthor()))
-                .genre(GenreDto.toDto(book.getGenre()))
+                .author(AuthorDto.fromAuthor(book.getAuthor()))
+                .genre(GenreDto.fromGenre(book.getGenre()))
                 .build();
     }
 
@@ -40,11 +40,11 @@ public class BookDto {
      * @param dto транспортный объект
      * @return книга
      */
-    public static Book toDomainObject(BookDto dto) {
+    public static Book fromDto(BookDto dto) {
         final var authorDto = dto.getAuthor();
-        final var author = authorDto != null ? AuthorDto.toDomainObject(authorDto) : null;
+        final var author = authorDto != null ? AuthorDto.fromDto(authorDto) : null;
         final var genreDto = dto.getGenre();
-        final var genre = genreDto != null ? GenreDto.toDomainObject(genreDto) : null;
+        final var genre = genreDto != null ? GenreDto.fromDto(genreDto) : null;
         return Book.builder()
                 .id(dto.getId())
                 .title(dto.getTitle())

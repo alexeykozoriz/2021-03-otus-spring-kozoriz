@@ -23,12 +23,12 @@ public class BookCommentDto {
      * @param comment комментарий
      * @return транспортный объект
      */
-    public static BookCommentDto toDto(BookComment comment) {
+    public static BookCommentDto fromComment(BookComment comment) {
         return BookCommentDto.builder()
                 .id(comment.getId())
                 .author(comment.getAuthor())
                 .text(comment.getText())
-                .book(BookDto.toDto(comment.getBook()))
+                .book(BookDto.fromBook(comment.getBook()))
                 .build();
     }
 
@@ -38,12 +38,12 @@ public class BookCommentDto {
      * @param dto транспортный объект
      * @return комментарий
      */
-    public static BookComment toDomainObject(BookCommentDto dto) {
+    public static BookComment fromDto(BookCommentDto dto) {
         return BookComment.builder()
                 .id(dto.getId())
                 .author(dto.getAuthor())
                 .text(dto.getText())
-                .book(BookDto.toDomainObject(dto.getBook()))
+                .book(BookDto.fromDto(dto.getBook()))
                 .build();
     }
 }

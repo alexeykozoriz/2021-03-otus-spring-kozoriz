@@ -62,7 +62,7 @@ class BookControllerTest {
     void getAll() throws Exception {
         var books = List.of(createBook());
         given(bookService.read()).willReturn(books);
-        var expected = books.stream().map(BookDto::toDto).collect(Collectors.toList());
+        var expected = books.stream().map(BookDto::fromBook).collect(Collectors.toList());
         mvc.perform(get("/books"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expected)));
@@ -73,7 +73,7 @@ class BookControllerTest {
     void getBookUnauthorized() throws Exception {
         var book = Optional.of(createBook());
         given(bookService.read(anyLong())).willReturn(book);
-        var expected = BookDto.toDto(book.get());
+        var expected = BookDto.fromBook(book.get());
         mvc.perform(get("/books/1"))
                 .andExpect(status().isFound());
     }
@@ -84,7 +84,7 @@ class BookControllerTest {
     void getBook() throws Exception {
         var book = Optional.of(createBook());
         given(bookService.read(anyLong())).willReturn(book);
-        var expected = BookDto.toDto(book.get());
+        var expected = BookDto.fromBook(book.get());
         mvc.perform(get("/books/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expected)));
@@ -94,7 +94,7 @@ class BookControllerTest {
     @Test
     void postBookUnauthorized() throws Exception {
         var book = createBook();
-        var dto = BookDto.toDto(book);
+        var dto = BookDto.fromBook(book);
 
         mvc.perform(post("/books")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -109,7 +109,7 @@ class BookControllerTest {
     @Test
     void postBook() throws Exception {
         var book = createBook();
-        var dto = BookDto.toDto(book);
+        var dto = BookDto.fromBook(book);
 
         mvc.perform(post("/books")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -124,7 +124,7 @@ class BookControllerTest {
     @Test
     void putBookUnauthorized() throws Exception {
         var book = createBook();
-        var dto = BookDto.toDto(book);
+        var dto = BookDto.fromBook(book);
 
         mvc.perform(put("/books")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -139,7 +139,7 @@ class BookControllerTest {
     @Test
     void putBook() throws Exception {
         var book = createBook();
-        var dto = BookDto.toDto(book);
+        var dto = BookDto.fromBook(book);
 
         mvc.perform(put("/books")
                 .contentType(MediaType.APPLICATION_JSON)

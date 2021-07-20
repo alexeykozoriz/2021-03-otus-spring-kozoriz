@@ -57,7 +57,7 @@ class BookCommentControllerTest {
     void getAll() throws Exception {
         var comments = List.of(createBookComment());
         given(bookCommentsService.findByBookId(anyLong())).willReturn(comments);
-        var expected = comments.stream().map(BookCommentDto::toDto).collect(Collectors.toList());
+        var expected = comments.stream().map(BookCommentDto::fromComment).collect(Collectors.toList());
         mvc.perform(get("/comments/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expected)));
@@ -67,7 +67,7 @@ class BookCommentControllerTest {
     @Test
     void postCommentUnauthorized() throws Exception {
         var comment = createBookComment();
-        var dto = BookCommentDto.toDto(comment);
+        var dto = BookCommentDto.fromComment(comment);
 
         mvc.perform(post("/comments")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -82,7 +82,7 @@ class BookCommentControllerTest {
     @Test
     void postComment() throws Exception {
         var comment = createBookComment();
-        var dto = BookCommentDto.toDto(comment);
+        var dto = BookCommentDto.fromComment(comment);
 
         mvc.perform(post("/comments")
                 .contentType(MediaType.APPLICATION_JSON)

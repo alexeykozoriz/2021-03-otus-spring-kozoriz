@@ -23,25 +23,25 @@ public class BookController {
 
     @GetMapping("/books")
     public List<BookDto> getAll() {
-        return bookService.read().stream().map(BookDto::toDto).collect(Collectors.toList());
+        return bookService.read().stream().map(BookDto::fromBook).collect(Collectors.toList());
     }
 
     @GetMapping("/books/{id}")
     public BookDto getBook(@PathVariable("id") long id) {
         var book = bookService.read(id).orElseThrow(NotFoundException::new);
-        return BookDto.toDto(book);
+        return BookDto.fromBook(book);
     }
 
     @PostMapping("/books")
     public Long postBook(@RequestBody BookDto dto) {
-        var book = BookDto.toDomainObject(dto);
+        var book = BookDto.fromDto(dto);
         bookService.save(book);
         return book.getId();
     }
 
     @PutMapping("/books")
     public void putBook(@RequestBody BookDto dto) {
-        var book = BookDto.toDomainObject(dto);
+        var book = BookDto.fromDto(dto);
         bookService.save(book);
     }
 
