@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.Assert;
 import ru.otus.homework20210607.domain.User;
 
 import java.util.Collection;
@@ -19,7 +20,11 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
+        final var role = user.getRole();
+        Assert.isTrue(!role.startsWith("ROLE_"), () -> {
+            throw new IllegalArgumentException(role + " cannot start with ROLE_ (it is automatically added)");
+        });
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
         return Collections.singletonList(authority);
     }
 
