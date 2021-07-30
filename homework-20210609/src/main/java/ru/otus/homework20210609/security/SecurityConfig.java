@@ -1,6 +1,7 @@
 package ru.otus.homework20210609.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,8 +17,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import static ru.otus.homework20210609.security.SecurityConstants.SIGN_UP_URL;
-
 /**
  * Конфигурация безопасности
  */
@@ -26,6 +25,22 @@ import static ru.otus.homework20210609.security.SecurityConstants.SIGN_UP_URL;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String ADMIN = "ADMIN";
+
+    @Value("${security.header}")
+    private String securityHeader;
+
+    @Value("${security.secret}")
+    private String securitySecret;
+
+    @Value("${security.expiration-time}")
+    private long securityExpirationTime;
+
+    @Value("${security.token-prefix}")
+    private String securityTokenPrefix;
+
+    @Value("${security.sign-up-url}")
+    private String securitySignUpUrl;
+
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -61,14 +76,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers(SIGN_UP_URL + "/login").permitAll()
+                .antMatchers(securitySignUpUrl + "/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/books").hasRole(ADMIN)
                 .antMatchers(HttpMethod.PUT, "/api/books/**").hasRole(ADMIN)
                 .antMatchers(HttpMethod.DELETE, "/api/books/**").hasRole(ADMIN)
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), securitySignUpUrl, securityExpirationTime, securitySecret))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), securityHeader, securityTokenPrefix, securitySecret))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

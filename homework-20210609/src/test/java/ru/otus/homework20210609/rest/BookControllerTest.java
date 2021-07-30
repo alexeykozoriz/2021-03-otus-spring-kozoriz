@@ -1,35 +1,32 @@
 package ru.otus.homework20210609.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.homework20210609.domain.Book;
+import ru.otus.homework20210609.domain.User;
 import ru.otus.homework20210609.rest.dto.BookDto;
 import ru.otus.homework20210609.service.BookCommentsService;
 import ru.otus.homework20210609.service.BookService;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.otus.homework20210609.test.MockFactory.createBook;
+import static ru.otus.homework20210609.test.MockFactory.*;
+import static ru.otus.homework20210609.test.TokenUtility.getToken;
 
 @DisplayName("Контроллер книг")
-@WebMvcTest(BookController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class BookControllerTest {
 
     @Autowired
@@ -38,186 +35,92 @@ class BookControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
-    @MockBean
+    @Autowired
     private BookService bookService;
 
-    @MockBean
+    @Autowired
     private BookCommentsService bookCommentsService;
 
-    @MockBean
-    private UserDetailsService userDetailsService;
+    @Value("${security.header}")
+    private String securityHeader;
 
-    @DisplayName("Возврат всех (неавторизованный)")
-    @Test
-    void getAllUnauthorized() throws Exception {
-        var books = List.of(createBook());
-        given(bookService.read()).willReturn(books);
-        mvc.perform(get("/api/books"))
-                .andExpect(status().isForbidden());
+    @Value("${security.sign-up-url}")
+    private String securitySignUpUrl;
+
+    @Value("${security.token-prefix}")
+    private String securityTokenPrefix;
+
+    private String token;
+
+    @BeforeEach
+    void setUp() {
+        token = getToken(User.builder().userName(JOHN_DOE).password(JOHN_DOE_PASSWORD).build(), mvc, mapper, securitySignUpUrl, securityTokenPrefix);
     }
 
     @DisplayName("Возврат всех")
-    @WithMockUser(username = "John Doe", authorities = {"ROLE_USER"})
     @Test
     void getAll() throws Exception {
-        var books = List.of(createBook());
-        given(bookService.read()).willReturn(books);
-        var expected = books.stream().map(BookDto::fromBook).collect(Collectors.toList());
-        mvc.perform(get("/api/books"))
+        var expected = bookService.read().stream().map(BookDto::fromBook).collect(Collectors.toList());
+        mvc.perform(get("/api/books").header(securityHeader, token))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expected)));
-    }
-
-    @DisplayName("Возврат по идентификатору (неавторизованный)")
-    @Test
-    void getBookUnauthorized() throws Exception {
-        var book = Optional.of(createBook());
-        given(bookService.read(anyLong())).willReturn(book);
-        var expected = BookDto.fromBook(book.get());
-        mvc.perform(get("/api/books/1"))
-                .andExpect(status().isForbidden());
     }
 
     @DisplayName("Возврат по идентификатору")
-    @WithMockUser(username = "John Doe", authorities = {"ROLE_USER"})
     @Test
     void getBook() throws Exception {
-        var book = Optional.of(createBook());
-        given(bookService.read(anyLong())).willReturn(book);
-        var expected = BookDto.fromBook(book.get());
-        mvc.perform(get("/api/books/1"))
+        var expected = BookDto.fromBook(bookService.read(1L).orElseThrow());
+        mvc.perform(get("/api/books/1").header(securityHeader, token))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expected)));
     }
 
-    @DisplayName("Создание (неавторизованное)")
-    @Test
-    void postBookUnauthorized() throws Exception {
-        var book = createBook();
-        var dto = BookDto.fromBook(book);
-
-        mvc.perform(post("/api/books")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(dto)))
-                .andExpect(status().isForbidden());
-
-        then(bookService).shouldHaveNoInteractions();
-    }
-
-    @DisplayName("Создание (роль USER)")
-    @WithMockUser(username = "John Doe", authorities = {"ROLE_USER"})
-    @Test
-    void postBookByUser() throws Exception {
-        var book = createBook();
-        var dto = BookDto.fromBook(book);
-
-        mvc.perform(post("/api/books")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(dto)))
-                .andExpect(status().isForbidden());
-
-        then(bookService).shouldHaveNoInteractions();
-    }
-
     @DisplayName("Создание")
-    @WithMockUser(username = "John Doe", authorities = {"ROLE_ADMIN"})
     @Test
     void postBook() throws Exception {
         var book = createBook();
         var dto = BookDto.fromBook(book);
 
-        mvc.perform(post("/api/books")
+        var responseString = mvc.perform(post("/api/books").header(securityHeader, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
-                .andExpect(content().bytes("1".getBytes(StandardCharsets.UTF_8)));
+                .andReturn()
+                .getResponse().getContentAsString();
 
-        then(bookService).should().save(book);
-    }
-
-    @DisplayName("Обновление (неавторизованное)")
-    @Test
-    void putBookUnauthorized() throws Exception {
-        var book = createBook();
-        var dto = BookDto.fromBook(book);
-
-        mvc.perform(put("/api/books")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(dto)))
-                .andExpect(status().isForbidden());
-
-        then(bookService).shouldHaveNoInteractions();
-    }
-
-    @DisplayName("Обновление (роль USER)")
-    @WithMockUser(username = "John Doe", authorities = {"ROLE_USER"})
-    @Test
-    void putBookByUser() throws Exception {
-        var book = createBook();
-        var dto = BookDto.fromBook(book);
-
-        mvc.perform(put("/api/books")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(dto)))
-                .andExpect(status().isForbidden());
-
-        then(bookService).shouldHaveNoInteractions();
+        var id = Long.parseLong(responseString);
+        assertThat(bookService.read(id)).isPresent();
     }
 
     @DisplayName("Обновление")
-    @WithMockUser(username = "John Doe", authorities = {"ROLE_ADMIN"})
     @Test
     void putBook() throws Exception {
-        var book = createBook();
+        var book = bookService.read().get(0);
+        book.setGenre(createGenre());
         var dto = BookDto.fromBook(book);
 
-        mvc.perform(put("/api/books")
+        mvc.perform(put("/api/books").header(securityHeader, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dto)))
                 .andExpect(status().isOk());
 
-        then(bookService).should().save(book);
-    }
-
-    @DisplayName("Удаление (неавторизованное)")
-    @Test
-    void deleteBookUnauthorized() throws Exception {
-        mvc.perform(delete("/api/books/1"))
-                .andExpect(status().isForbidden());
-
-        then(bookCommentsService).shouldHaveNoInteractions();
-        then(bookService).shouldHaveNoInteractions();
-    }
-
-    @DisplayName("Удаление (роль USER)")
-    @WithMockUser(username = "John Doe", authorities = {"ROLE_USER"})
-    @Test
-    void deleteBookByUser() throws Exception {
-        mvc.perform(delete("/api/books/1"))
-                .andExpect(status().isForbidden());
-
-        then(bookCommentsService).shouldHaveNoInteractions();
-        then(bookService).shouldHaveNoInteractions();
+        assertThat(bookService.read(book.getId()).orElseThrow())
+                .matches(p -> p.getGenre().getTitle().equals(book.getGenre().getTitle()));
     }
 
     @DisplayName("Удаление")
-    @WithMockUser(username = "John Doe", authorities = {"ROLE_ADMIN"})
     @Test
     void deleteBook() throws Exception {
-        mvc.perform(delete("/api/books/1"))
+        mvc.perform(delete("/api/books/1").header(securityHeader, token))
                 .andExpect(status().isOk());
 
-        then(bookCommentsService).should().deleteByBookId(1L);
-        then(bookService).should().delete(1L);
+        assertThat(bookService.read(1L)).isEmpty();
     }
 
     @DisplayName("Обработка ошибки")
-    @WithMockUser(username = "John Doe", authorities = {"ROLE_USER"})
     @Test
     void handleException() throws Exception {
-        Optional<Book> bookEmpty = Optional.empty();
-        given(bookService.read(anyLong())).willReturn(bookEmpty);
-        mvc.perform(get("/api/books/2"))
+        mvc.perform(get("/api/books/-1").header(securityHeader, token))
                 .andExpect(status().isNotFound());
     }
 }
