@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+</head>
+<body>
+<h2>Demo</h2>
+<div th:each="book: ${books}">
+    <details>
+        <summary>
+            <span th:each="entry: ${book.get('CONTENT')}">[[${entry.getValue()}]]&nbsp;</span>
+        </summary>
+        <ul>
+            <li th:each="link: ${book.get('LINKS')}">
+                <span id="key" th:text="${link.getKey()}"></span>:
+                <span id="value"><a th:href="${link.getValue()}">[[${link.getValue()}]]</a></span>
+            </li>
+        </ul>
+    </details>
+</div>
+
+<script type="text/javascript">
+
+    // обработка развёртывания детализации
+    $("details").click(loadContentAsync)
+
+    // загрузка детализации
+    function loadContentAsync(event) {
+
+        let details = $(event.target).closest('details');
+        $(details).find("li").each((i, li) => {
+            let linkKey = $(li).find("span#key")[0].innerHTML;
+            if (linkKey === "book" || linkKey === "self") {
+                return;
+            }
+            let linkValue = $(li).find("span#value")[0];
+            if (!linkValue.innerText.startsWith("http://")) {
+                return;
+            }
+            $.ajax({
+                type: "GET",
+                url: linkValue.innerText,
+                success: (e) => {
+                    linkValue.innerText = "";
+                    for (var item in e) {
+                        if (!e.hasOwnProperty(item) || item === "_links") {
+                            continue;
+                        }
+                        linkValue.innerText += e[item];
+                    }
+                }
+            });
+        });
+    }
+</script>
+</body>
+</html>
