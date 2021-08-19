@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+producer:
+  url: ${PRODUCER_URL:http://localhost:30001}
+  url-external: ${PRODUCER_URL_EXTERNAL:http://localhost:30001}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    enabled-by-default: true
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+  health:
+    defaults:
+      enabled: true
+
+logging:
+  level:
+    ROOT: INFO
+  file:
+    name: "library.log"
