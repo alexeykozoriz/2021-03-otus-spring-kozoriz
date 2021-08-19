@@ -1,0 +1,5 @@
+kafka:
+  bootstrap-address: http://localhost:9092
+demo:
+  groupId: demo
+  topic: topic1423
