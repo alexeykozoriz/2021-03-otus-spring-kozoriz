@@ -1,0 +1,33 @@
+<form (submit)="onSubmit()">
+  <h4>Book information</h4>
+  <br/>
+  <mat-form-field style="width: 550px">
+    <mat-label>Title</mat-label>
+    <input matInput [(ngModel)]="title" [formControl]="titleControl">
+  </mat-form-field>
+  <br/>
+  <mat-form-field>
+    <mat-label>Publication year</mat-label>
+    <input matInput [(ngModel)]="publicationYear" type="number" [formControl]="publicationYearControl">
+  </mat-form-field>
+  <br/>
+  <mat-form-field style="width: 550px">
+    <mat-label>Author</mat-label>
+    <input matInput [(ngModel)]="author" [matAutocomplete]="authorAutocomplete" [formControl]="authorControl">
+    <mat-autocomplete #authorAutocomplete="matAutocomplete">
+      <mat-option *ngFor="let author of filteredAuthors | async" [value]="author">{{author}}</mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <br/>
+  <mat-form-field style="width: 550px">
+    <mat-label>Genre</mat-label>
+    <input matInput [(ngModel)]="genre" [matAutocomplete]="genreAutocomplete" [formControl]="genreControl">
+    <mat-autocomplete #genreAutocomplete="matAutocomplete">
+      <mat-option *ngFor="let genre of filteredGenres | async" [value]="genre">{{genre}}</mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-action-row>
+    <button mat-button mat-dialog-close type="submit">Proceed</button>
+    <button mat-button mat-dialog-close>Cancel</button>
+  </mat-action-row>
+</form>
