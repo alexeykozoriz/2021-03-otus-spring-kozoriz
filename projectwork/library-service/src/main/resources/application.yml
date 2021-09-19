@@ -39,3 +39,10 @@ logging:
     ROOT: INFO
   file:
     name: "library.log"
+
+security:
+  header: Authorization
+  secret: A78147AB39659C335E683DE127AFC
+  expiration-time: 900000
+  token-prefix: Bearer
+  sign-up-url: /users

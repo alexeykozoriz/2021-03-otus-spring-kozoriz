@@ -4,6 +4,7 @@ import {User} from "../dto/user";
 import {environment} from "../../environments/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {map} from "rxjs/operators";
+import jwt_decode from "jwt-decode";
 
 @Injectable({
   providedIn: 'root'
@@ -27,18 +28,20 @@ export class AuthenticationService {
   }
 
   login(username: string, password: string) {
-    return this.httpClient.get<any>(environment.apiUrl, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${window.btoa(username + ':' + password)}`
-      }),
-      observe: 'response'
-    })
-      .pipe(map(response => {
+    return this.httpClient.post(environment.apiUrl + "/users/login",
+      {
+        userName: username,
+        password: password
+      },
+      {
+        responseType: 'text'
+      })
+      .pipe(map(body => {
+        let jwt: any = jwt_decode(body);
         let user = new User()
-        user.auth = window.btoa(username + ':' + password);
+        user.token = body;
         user.username = username;
-        user.authorities = response.headers.get("X-Authorities") ?? "";
+        user.authorities = jwt.authorities.join(',');
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
       }));

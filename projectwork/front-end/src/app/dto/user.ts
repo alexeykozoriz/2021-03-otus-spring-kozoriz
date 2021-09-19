@@ -1,5 +1,5 @@
 export class User {
-  auth?: string;
+  token?: string;
   username?: string;
   authorities?: string;
 
