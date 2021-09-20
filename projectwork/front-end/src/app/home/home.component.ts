@@ -122,8 +122,12 @@ export class HomeComponent implements OnInit {
       let bookTitle = matDialogRef.componentInstance.title ?? "";
       let bookPublicationYear = matDialogRef.componentInstance.publicationYear ?? 1970;
       forkJoin([this.buildAuthorUrl(author), this.buildGenreUrl(genre)])
-        .subscribe(urls => this.updateBook(bookUrl, bookTitle, bookPublicationYear, urls[0], urls[1])
-          .subscribe(() => this.loadBooks()));
+        .subscribe(urls => this.updateBookLinks(bookUrl, urls[0], urls[1])
+          .subscribe(() => this.halService.put(bookUrl, {
+            title: bookTitle,
+            publicationYear: bookPublicationYear
+          })
+            .subscribe(() => this.loadBooks())));
     });
   }
 
@@ -206,18 +210,12 @@ export class HomeComponent implements OnInit {
    * Обновление книги
    *
    * @param bookUrl ссылка на обновляемую книгу
-   * @param bookTitle название
-   * @param bookPublicationYear год публикации
    * @param authorUrl ссылка на автора
    * @param genreUrl ссылка на жанр
    * @private подписка
    */
-  private updateBook(bookUrl: string, bookTitle: string, bookPublicationYear: number, authorUrl: string, genreUrl: string): Observable<any> {
+  private updateBookLinks(bookUrl: string, authorUrl: string, genreUrl: string): Observable<any> {
     return forkJoin([
-      this.halService.put(bookUrl, {
-        title: bookTitle,
-        publicationYear: bookPublicationYear
-      }),
       this.halService.put(bookUrl + "/author", {
         _links: {
           author: {

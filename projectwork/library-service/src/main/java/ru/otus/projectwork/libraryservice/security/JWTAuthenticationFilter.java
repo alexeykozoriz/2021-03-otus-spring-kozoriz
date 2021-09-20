@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
  */
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private static final String X_AUTHORITIES = "X-Authorities";
-
     private final AuthenticationManager authenticationManager;
     private final long securityExpirationTime;
     private final String securitySecret;
@@ -66,8 +64,5 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .sign(Algorithm.HMAC512(securitySecret.getBytes()));
         res.getWriter().write(token);
         res.getWriter().flush();
-        res.addHeader("Access-Control-Allow-Headers", X_AUTHORITIES);
-        res.addHeader("Access-Control-Expose-Headers", X_AUTHORITIES);
-        res.addHeader(X_AUTHORITIES, String.join(",", authorities));
     }
 }
