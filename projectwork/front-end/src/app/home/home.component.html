@@ -1,0 +1,20 @@
+<mat-accordion>
+  <mat-expansion-panel hideToggle *ngFor="let book of books" (afterExpand)="getLinkedObjects(book)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>{{book.getSummary()}}</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-list>
+      <mat-list-item *ngFor="let linkedObject of book.linkedObjects.entries()">
+        {{linkedObject[0]}}: {{linkedObject[1].getSummary()}}
+      </mat-list-item>
+    </mat-list>
+    <mat-action-row *ngIf="isAdmin()">
+      <button mat-button (click)="update(book)">Edit</button>
+      <button mat-button (click)="delete(book)">Delete</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
+<mat-action-row *ngIf="isAdmin()">
+  <button mat-button (click)="create()">Add Book</button>
+</mat-action-row>
+<mat-paginator [length]="page.totalElements" [pageSize]="page.size" [pageSizeOptions]="[5, 10, 25, 100]" (page)="loadBooks($event)"></mat-paginator>
